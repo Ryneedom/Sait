@@ -19,7 +19,7 @@ from birja import views
 
 
 urlpatterns = [
-   # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', views.start),
     path('login', views.authenticate),
     path('logout', views.logout),
