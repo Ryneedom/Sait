@@ -10,8 +10,14 @@
         <div class="row-justify-content">
             <h2>Информация о вакансиях</h2>
             {% for vacancy in vacancies %}
-            <p>№ {{vacancy.id}}. Компания: {{vacancy.company.company_name}}</p>
-            <p>Должность: № {{vacancy.post.id}}, Название: {{vacancy.post.post}}</p>
+            <div class="card">
+                <div class="card-head">
+                    № {{vacancy.id}}. Компания: {{vacancy.company.company_name}}
+                </div>
+                <div class="card-body">
+                    Должность: № {{vacancy.post.id}}, Название: {{vacancy.post.post}}
+                </div>
+            </div>
             {% endfor %}
         </div>
     </div>

@@ -38,13 +38,20 @@ def authenticate(request):
         return render(request, 'auth/login.html', {'message': ''})
 
 
-# Регистрация пользователей
+# Регистрация пользователей и компаний
 def register(request):
     if request.method == "POST":
-        global authorizated_applicant
-        new_applicant = Applicant.objects.create(name=request.POST.get('name'), condition=request.POST.get('condition'))
-        authorizated_applicant = Applicant.objects.get(id=new_applicant.id)
-        return HttpResponseRedirect('applicants/mainpage')
+        if request.POST.get('name', '') != '':
+            global authorizated_applicant
+            new_applicant = Applicant.objects.create(name=request.POST.get('name'), condition=request.POST.get('condition'))
+            authorizated_applicant = Applicant.objects.get(id=new_applicant.id)
+            return HttpResponseRedirect('/applicants/mainpage')
+        if request.POST.get('company_name', '') != '':
+            global authorizated_company
+            new_company = Company.objects.create(company_name=request.POST.get('company_name'))
+            authorizated_company = Company.objects.get(id=new_company.id)
+            return HttpResponseRedirect('/companies/mainpage')
+
     else:
         return render(request, 'auth/register.html')
 
@@ -52,7 +59,9 @@ def register(request):
 # Выход пользователя из системы
 def logout(request):
     global authorizated_applicant
+    global authorizated_company
     authorizated_applicant = Applicant()
+    authorizated_company = Company()
     return HttpResponseRedirect('/login')
 
 
@@ -100,8 +109,11 @@ def company_index(request):
 def company_show(request):
     global authorizated_company
     if authorizated_company.company_name == '':
-        return HttpResponseRedirect('login')
-    return render(request, 'company/show.html', {'company': authorizated_company})
+        return HttpResponseRedirect('/login')
+
+    vacancies = authorizated_company.vacancy_set.all()
+    vacancy_count = authorizated_company.vacancy_set.count()
+    return render(request, 'company/show.html', {'company': authorizated_company, 'count': vacancy_count, 'vacancies': vacancies})
 
 
 # сохранение данных в бд
@@ -179,10 +191,44 @@ def post_delete(request, id):
 
 
 # Отдел REST API для Vacancy
+
 def vacancy_index(request):
     vacancies = Vacancy.objects.order_by('id')
     return render(request, 'vacancy/index.html', context={'vacancies': vacancies})
 
 
+# сохранение данных в бд
+def vacancy_create(request):
+    if request.method == 'POST':
+        new_vacancy = Vacancy()
+        new_vacancy.company_id = authorizated_company.id
+        new_vacancy.post_id = request.POST.get('post')
+        new_vacancy.salary = request.POST.get('salary')
+        new_vacancy.save()
+
+        return HttpResponseRedirect('/companies/mainpage')
+    else:
+        posts = Post.objects.order_by('id')
+        return render(request, "vacancy/create.html", {'posts':posts})
+
+
+# изменение данных в бд
+def vacancy_edit(request, id):
+    vacancy = Vacancy.objects.get(id=id)
+    if request.method == 'POST':
+        vacancy.post_id = request.POST.get('post')
+        vacancy.salary = request.POST.get('salary')
+        vacancy.save()
+        return HttpResponseRedirect('/companies/mainpage')
+    else:
+        posts = Post.objects.order_by('id')
+        return render(request, "vacancy/edit.html", {'vacancy': vacancy, 'posts':posts})
+
+# удаление данных из бд
+def vacancy_delete(request, id):
+        vacancy = Vacancy.objects.get(id=id)
+        vacancy.delete()
+        return HttpResponseRedirect('/companies/mainpage')
+
 def start(request):
-    return render(request, 'start.html')
+    return HttpResponseRedirect('/login')

@@ -8,10 +8,25 @@
 <body>
     <div class="container">
         <div class="row-justify-content">
-            <h2>Информация об отдельной компании</h2>
-            <p>№ {{company.id}}. Название: {{company.company_name}}</p>
-            <p><a href="companies/edit/{{company.id}}">Изменить</a> | <a href="companies/delete/{{company.id}}">Удалить</a></p>
-            <p><a href="/companies">Вернуться к главному списку</a></p>
+            <h1>Главная страница компании</h1>
+            <p>Название компании: {{company.company_name}}</p><br>
+            {% if count != 0 %}
+            <p><h3>Вакансии компании</h3></p>
+                {% for vacancy in vacancies %}
+                    <div class="card">
+                        <div class="card-body">
+                            <p>№ {{vacancy.id}}. Компания: {{vacancy.company.company_name}}</p>
+                            <p>Должность: {{vacancy.post.post}}</p>
+                            <p>Размер заработой платы: {{vacancy.salary}}</p>
+                            <a class="btn btn-rimary" href='/vacancies/edit/{{vacancy.id}}'>Изменить вакансию</a><br>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Вакансий на данный момент нет</p>
+            {% endif %}
+            <p><a class="btn btn-primary" href='/vacancies/create'>Добавить вакансию</a></p>
+            <p><a class="btn btn-secondary" href='/logout'>Выйти</a></p>
         </div>
     </div>
 </body>
