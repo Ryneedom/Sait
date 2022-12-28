@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Birja</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="row-justify-content">
+            <h2>Информация о людях, которые ищут работу</h2>
+            <h2>Информация о компаниях</h2>
+            <a href="companies/create">Добавить компанию</a>
+            {% for company in page_obj.object_list %}
+            <p>№ {{company.id}}. Название: {{company.company_name}}</p>
+            <p><a href="companies/edit/{{company.id}}">Изменить</a> | <a href="companies/delete/{{company.id}}">Удалить</a></p>
+            {% endfor %}
+            <center>
+                {%if page_obj.has_previous %} {# whether the previous page exists #}
+                    <a href="?page={{page_obj.previous_page_number}}"><</a> {# link to the prev page #}
+                {% endif %}
+                <span>{{page_obj.number}}</span> {# the current page number #}
+
+                {%if page_obj.has_next %} {# whether the next page exists #}
+                    <a href="?page={{page_obj.next_page_number}}">></a> {# link to the next page #}
+                {% endif %}
+            </center>
+        </div>
+    </div>
+</body>
+</html>

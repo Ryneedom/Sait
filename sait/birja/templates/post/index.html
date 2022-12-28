@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Birja</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="row-justify-content">
+            <h2>Информация о профессиях</h2>
+            <a href="posts/create">Добавить профессию</a>
+            {% for post in posts %}
+            <p>№ {{post.id}}. Название: {{post.post}}</p>
+            <p><a href="posts/edit/{{post.id}}">Изменить</a> | <a href="posts/delete/{{post.id}}">Удалить</a></p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
