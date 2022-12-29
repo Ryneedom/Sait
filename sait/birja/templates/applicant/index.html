@@ -9,8 +9,18 @@
     <div class="container">
         <div class="row-justify-content">
             <h2>Информация о людях, которые ищут работу</h2>
-            {% for applicant in applicants %}
-            <p>Имя: {{ applicant.name }}, Статус: {{ applicant.condition }}</p>
+            {% for applicant, posts in applicants_posts.items %}
+            <div class="card">
+                <div class="card-head">
+                    <p>Имя: {{ applicant.name }}, Статус: {{ applicant.condition }}</p>
+                </div>
+                <div class="card-body">
+                    <p>Должности:</p>
+                    {% for post in posts %}
+                    <p>№ {{post.id}}. Название: {{post.post}}</p>
+                    {% endfor %}
+                </div>
+            </div>
             {% endfor %}
         </div>
     </div>

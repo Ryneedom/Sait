@@ -39,4 +39,6 @@ urlpatterns = [
     path("vacancies/create", views.vacancy_create),
     path("vacancies/edit/<int:id>/", views.vacancy_edit),
     path("vacancies/delete/<int:id>/", views.vacancy_delete),
+    path("listposts/create", views.listpost_create),
+    path("listposts/delete/<int:id>/", views.listpost_delete),
 ]

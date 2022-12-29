@@ -72,7 +72,7 @@ def applicant_show(request):
         return HttpResponseRedirect('login')
 
     try:
-        applicant_listposts = ListPost.objects.filter(post_id=authorizated_applicant.id)
+        applicant_listposts = ListPost.objects.filter(applicant_id=authorizated_applicant.id)
         posts = []
         for listpost in applicant_listposts:
             posts.append(Post.objects.get(id=listpost.post_id))
@@ -83,7 +83,18 @@ def applicant_show(request):
 
 def applicant_index(request):
     applicants = Applicant.objects.order_by('id')
-    data = {'applicants': applicants}
+    applicants_posts = {}
+
+    for applicant in applicants:
+        applicant_listposts = ListPost.objects.filter(applicant_id=applicant.id)
+        posts = []
+
+        for listpost in applicant_listposts:
+            posts.append(Post.objects.get(id=listpost.post_id))
+
+        applicants_posts.update({applicant: posts})
+
+    data = {'applicants_posts': applicants_posts}
     return render(request, 'applicant/index.html', context=data)
 
 
@@ -229,6 +240,28 @@ def vacancy_delete(request, id):
         vacancy = Vacancy.objects.get(id=id)
         vacancy.delete()
         return HttpResponseRedirect('/companies/mainpage')
+
+
+# Отдел REST API для ListPost
+# добавление данных в бд
+def listpost_create(request):
+    if request.method == 'POST':
+        new_listpost = ListPost()
+        new_listpost.post_id = request.POST.get('post')
+        new_listpost.applicant_id = authorizated_applicant.id
+        new_listpost.save()
+        return HttpResponseRedirect('/applicants/mainpage')
+    else:
+        posts = Post.objects.order_by('id')
+        return render(request, 'listpost/create.html', {'posts': posts})
+
+
+# удаление данных из бд
+def listpost_delete(request, id):
+    listpost = ListPost.objects.get(post_id=id, applicant_id=authorizated_applicant.id)
+    listpost.delete()
+    return HttpResponseRedirect('/applicants/mainpage')
+
 
 def start(request):
     return HttpResponseRedirect('/login')

@@ -14,11 +14,13 @@
             {% if posts != 0 %}
                 {% for post in posts %}
                     <p>№ {{post.id}}. Название: {{post.post}}</p>
+                    <p><a class="btn btn-second" href="/listposts/delete/{{post.id}}" >Удалить должность</a></p>
                 {% endfor %}
             {% else %}
                 <p>Должностей нет</p>
             {% endif %}
         </div>
+        <a class="btn btn-primary" href="/listposts/create" >Добавить себе должность</a>
         <a class="btn btn-primary" href="/vacancies" >Просмотреть вакансии</a>
         <a class="btn btn-second" href="/logout" >Выйти из системы</a>
     </div>
